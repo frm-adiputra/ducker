@@ -1,0 +1,6 @@
+table: mtcars
+validations:
+  - unique: model
+  - validate: model IS NOT NULL
+  - validate: mpg > 0
+  - validate: vs > 0
