@@ -4,7 +4,7 @@ defmodule Ducker.MixProject do
   def project do
     [
       app: :ducker,
-      version: "0.1.0",
+      version: "0.2.0",
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -16,7 +16,7 @@ defmodule Ducker.MixProject do
       ],
       docs: [
         main: "Ducker",
-        extras: ["README.md"]
+        extras: ["README.md", "tutorial.livemd"]
       ]
     ]
   end
@@ -31,7 +31,7 @@ defmodule Ducker.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:adbc, "~> 0.7.9"},
+      {:adbc, "~> 0.7.9", optional: true},
       {:ex_doc, "~> 0.38", only: :dev, runtime: false, warn_if_outdated: true},
       {:yaml_elixir, "~> 2.11.0"}
     ]
