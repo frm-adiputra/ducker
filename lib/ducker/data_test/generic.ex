@@ -1,5 +1,5 @@
-defmodule Ducker.Validation.Generic do
-  @behaviour Ducker.Validation
+defmodule Ducker.DataTest.Generic do
+  @behaviour Ducker.DataTest
 
   alias __MODULE__
   alias Ducker.SQLHelper
@@ -7,7 +7,7 @@ defmodule Ducker.Validation.Generic do
   defstruct [:file, :table, :expression, :where_clause, :type]
 
   @impl true
-  def validate(%Generic{expression: expression} = v) when is_binary(expression) do
+  def create_test_sql(%Generic{expression: expression} = v) when is_binary(expression) do
     where_clause =
       cond do
         is_list(v.where_clause) -> Enum.map(v.where_clause, &SQLHelper.escape_single_quotes/1)
@@ -27,20 +27,20 @@ defmodule Ducker.Validation.Generic do
         where_clause: where_clause,
         type: type
     }
-    |> do_validate()
+    |> interpolate_sql()
   end
 
-  def do_validate(%Generic{where_clause: nil} = v) do
+  defp interpolate_sql(%Generic{where_clause: nil} = v) do
     {
-      "validate #{v.table}: #{v.expression}",
-      "ducker_validate('#{v.type}', '#{v.table}', '#{v.expression}')"
+      "data test #{v.table}: #{v.expression}",
+      "ducker_data_test('#{v.type}', '#{v.table}', '#{v.expression}')"
     }
   end
 
-  def do_validate(%Generic{} = v) do
+  defp interpolate_sql(%Generic{} = v) do
     {
-      "validate #{v.table}: #{v.expression} WHERE #{v.where_clause}",
-      "ducker_validate('#{v.type}', '#{v.table}', '#{v.expression}', '#{Enum.join(v.where_clause, " AND ")}')"
+      "data test #{v.table}: #{v.expression} WHERE #{Enum.join(v.where_clause, " AND ")}",
+      "ducker_data_test('#{v.type}', '#{v.table}', '#{v.expression}', '#{Enum.join(v.where_clause, " AND ")}')"
     }
   end
 end

@@ -6,8 +6,8 @@ defmodule Ducker do
   defstruct [:conn, :work_dir]
   alias Adbc.Connection, as: Conn
   alias Ducker.FileHelper
-  alias Ducker.Validation
-  alias Ducker.Validation.Config
+  alias Ducker.DataTest
+  alias Ducker.DataTest.Config
 
   @doc """
   Initializes a Ducker struct with a connection and work directory.
@@ -22,10 +22,10 @@ defmodule Ducker do
   end
 
   @doc """
-  Resets the validation results in the database.
+  Resets the data test result in the database.
   """
-  def reset_validation_results!(%Ducker{} = ducker) do
-    Conn.query!(ducker.conn, "DELETE FROM ducker_validate_result")
+  def reset_data_test_result!(%Ducker{} = ducker) do
+    Conn.query!(ducker.conn, "DELETE FROM ducker_data_test_result")
   end
 
   @doc """
@@ -50,20 +50,20 @@ defmodule Ducker do
   end
 
   @doc """
-  Executes all validation files (.yaml) in the given directory.
+  Executes all data test files (.yaml) in the given directory.
 
   ## Options:
     - `:filter` - A function to filter files. It should take a file name as an argument and return true or false.
   """
-  def execute_validation_from_dir!(%Ducker{} = ducker, dir, opts \\ []) do
+  def execute_data_tests_from_dir!(%Ducker{} = ducker, dir, opts \\ []) do
     dir = Path.expand(dir, ducker.work_dir)
 
     Config.from_dir(dir, opts)
-    |> Enum.map(&execute_validation!(ducker, &1))
+    |> Enum.map(&execute_data_test!(ducker, &1))
   end
 
-  defp execute_validation!(%Ducker{} = ducker, v) do
-    case Validation.do_validate(ducker, v) do
+  defp execute_data_test!(%Ducker{} = ducker, v) do
+    case DataTest.run_test(ducker, v) do
       {:ok, _} ->
         {name, _} = v
         {:ok, name}
