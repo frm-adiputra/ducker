@@ -18,7 +18,8 @@ defmodule Ducker.DataTest do
       type: <type>
   ```
   """
-  @callback create_test_sql(config :: map()) :: {name :: binary(), sql :: binary()}
+  @callback create_test_sql(config :: map) ::
+              {:ok, {name :: String.t(), sql :: String.t()}} | {:error, reason :: String.t()}
 
   def run_test(%Ducker{conn: conn}, {name, sql}) do
     q = """

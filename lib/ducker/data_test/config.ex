@@ -52,11 +52,11 @@ defmodule Ducker.DataTest.Config do
     |> Enum.map(fn test_cfg -> create_test(filename, table, test_cfg) end)
   end
 
-  defp create_test(file, table, %{"test" => expr} = cfg) do
+  defp create_test(file, table, %{"assert" => assert} = cfg) do
     %Generic{
       file: file,
       table: table,
-      expression: expr,
+      assert: assert,
       where_clause: cfg["where"],
       type: cfg["type"]
     }
