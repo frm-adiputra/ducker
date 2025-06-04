@@ -46,14 +46,14 @@ defmodule Ducker.DataTest.Relationship do
           true -> v.type
         end
 
-      %{
-        v
-        | fields: fields,
-          to_fields: to_fields,
-          where_clause: where_clause,
-          type: type
-      }
-      |> interpolate_sql()
+      {:ok,
+       interpolate_sql(%{
+         v
+         | fields: fields,
+           to_fields: to_fields,
+           where_clause: where_clause,
+           type: type
+       })}
     end
   end
 
@@ -78,18 +78,16 @@ defmodule Ducker.DataTest.Relationship do
   end
 
   defp interpolate_sql(%Relationship{where_clause: nil} = v) do
-    {:ok,
-     {
-       "data test #{v.table}: (#{Enum.join(v.fields, ", ")}) -> #{v.to}(#{Enum.join(v.to_fields, ", ")})",
-       "ducker_data_test_relationship('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{v.to}', [#{v.to_fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}])"
-     }}
+    {
+      "data test #{v.table}: (#{Enum.join(v.fields, ", ")}) -> #{v.to}(#{Enum.join(v.to_fields, ", ")})",
+      "ducker_data_test_relationship('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{v.to}', [#{v.to_fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}])"
+    }
   end
 
   defp interpolate_sql(%Relationship{} = v) do
-    {:ok,
-     {
-       "data test #{v.table}: (#{Enum.join(v.fields, ", ")}) -> #{v.to}(#{Enum.join(v.to_fields, ", ")}) WHERE #{Enum.join(v.where_clause, " AND ")}",
-       "ducker_data_test_relationship('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{v.to}', [#{v.to_fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{Enum.join(v.where_clause, " AND ")}')"
-     }}
+    {
+      "data test #{v.table}: (#{Enum.join(v.fields, ", ")}) -> #{v.to}(#{Enum.join(v.to_fields, ", ")}) WHERE #{Enum.join(v.where_clause, " AND ")}",
+      "ducker_data_test_relationship('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{v.to}', [#{v.to_fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{Enum.join(v.where_clause, " AND ")}')"
+    }
   end
 end
