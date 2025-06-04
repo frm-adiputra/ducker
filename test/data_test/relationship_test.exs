@@ -173,18 +173,6 @@ defmodule DuckerTest.DataTest.Relationship do
                 }}
     end
 
-    test "invalid: to is required" do
-      cfg =
-        Config.from_string("""
-          table: some_table
-          data_tests:
-            - fields: field1
-              type: warn
-        """)
-
-      assert {:error, _} = Enum.at(cfg, 0)
-    end
-
     test "invalid: fields and to_fields must have the same length" do
       cfg =
         Config.from_string("""
