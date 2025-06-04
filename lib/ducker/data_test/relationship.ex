@@ -63,7 +63,7 @@ defmodule Ducker.DataTest.Relationship do
         {:error, "fields must be a list or a string"}
 
       not (is_nil(v.where_clause) or is_list(v.where_clause) or is_binary(v.where_clause)) ->
-        {:error, "where is optional butmust be a list or a string"}
+        {:error, "where is optional but must be a list or a string"}
 
       (is_binary(v.fields) and is_list(v.to_fields)) or
           (is_list(v.fields) and is_binary(v.to_fields)) ->
