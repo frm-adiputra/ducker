@@ -26,9 +26,8 @@ defmodule Ducker.FileHelper do
        |> Enum.sort()
        |> Enum.map(fn file -> Path.join(path, file) end)}
     else
-      {:error, reason} ->
-        IO.puts("Error listing files in #{path}: #{reason}")
-        {:error, reason}
+      {:error, :enoent} ->
+        {:error, "directory not found: #{path}"}
     end
   end
 

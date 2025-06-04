@@ -1,0 +1,33 @@
+model,color
+Mazda RX4,red
+Mazda RX4 Wag,blue
+Datsun 710,magenta
+Hornet 4 Drive,red
+Hornet Sportabout,red
+Valiant,red
+Duster 360,red
+Merc 240D,green
+Merc 230,red
+Merc 280,red
+Merc 280C,red
+Merc 450SE,red
+Merc 450SL,red
+Merc 450SLC,red
+Cadillac Fleetwood,yellow
+Lincoln Continental,red
+Chrysler Imperial,red
+Fiat 128,red
+Honda Civic,red
+Toyota Corolla,black
+Toyota Corona,red
+Dodge Challenger,red
+AMC Javelin,red
+Camaro Z28,red
+Pontiac Firebird,purple
+Fiat X1-9,red
+Porsche 914-2,orange
+Lotus Europa,red
+Ford Pantera L,red
+Ferrari Dino,red
+Maserati Bora,cyan
+Volvo 142E,red
