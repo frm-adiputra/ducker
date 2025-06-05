@@ -1,6 +1,14 @@
 # Ducker
 
-Elixir ELT (extract load transform) using DuckDB
+![Hex.pm Version](https://img.shields.io/hexpm/v/ducker?style=for-the-badge)
+
+ELT (extract load transform) DuckDB powered by [DuckDB](https://duckdb.org/) and [Elixir](https://elixir-lang.org/)
+
+## Features
+
+- Structure your queries as directories and files for easy management and version control
+- Test your data. Specify your testing using YAML
+- Flexibility by using DuckDB's powerful SQL language
 
 ## Installation
 
