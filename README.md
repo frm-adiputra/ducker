@@ -3,7 +3,7 @@
 
 <p>
     <a href="https://hex.pm/packages/ducker"><img alt="Hex.pm Version" src="https://img.shields.io/hexpm/v/ducker?style=for-the-badge"></a>
-    <a href="https://hexdocs.pm/ducker"><img alt="Hex.pm Documentation" src="https://img.shields.io/badge/HEX-doc-blue?style=for-the-badge"></a>
+    <a href="https://hexdocs.pm/ducker/readme.html"><img alt="Hex.pm Documentation" src="https://img.shields.io/badge/HEX-doc-blue?style=for-the-badge"></a>
 </p>
 
 ELT (extract load transform) powered by [DuckDB](https://duckdb.org/) and [Elixir](https://elixir-lang.org/)
@@ -26,4 +26,6 @@ def deps do
 end
 ```
 
-The docs can be found at <https://hexdocs.pm/ducker>.
+## Tutorial
+
+Usage examples can be found in the [tutorial page](tutorial.livemd).
