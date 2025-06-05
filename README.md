@@ -1,6 +1,10 @@
+
 # Ducker
 
-[![Hex.pm Version](https://img.shields.io/hexpm/v/ducker?style=for-the-badge)](https://hexdocs.pm/ducker)
+<p>
+    <a href="https://hex.pm/packages/ducker"><img alt="Hex.pm Version" src="https://img.shields.io/hexpm/v/ducker?style=for-the-badge"></a>
+    <a href="https://hexdocs.pm/ducker"><img alt="Hex.pm Documentation" src="https://img.shields.io/badge/HEX-doc-blue?style=for-the-badge"></a>
+</p>
 
 ELT (extract load transform) powered by [DuckDB](https://duckdb.org/) and [Elixir](https://elixir-lang.org/)
 
