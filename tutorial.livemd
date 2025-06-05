@@ -2,7 +2,7 @@
 
 ```elixir
 Mix.install([
-  {:ducker, "~> 0.2.0"},
+  {:ducker, "~> 0.3.0"},
   {:adbc, "~> 0.7.9"},
   {:kino, "~> 0.16.0"},
   {:kino_db, "~> 0.3.0"},
@@ -37,21 +37,21 @@ USE file_db;
 Initialize Ducker to create SQL macros and tables needed by Ducker.
 
 ```elixir
-ducker = Ducker.initialize!(conn, work_dir)
+ducker = Ducker.new!(conn, work_dir)
 ```
 
 ```elixir
 # clear validation results
-Ducker.reset_validation_results!(ducker)
+Ducker.reset_test_result!(ducker)
 
 # run query from `sources` directory
 # (relative to `work_dir`)
-Ducker.execute_query_file_from_dir!(ducker, "sources")
-|> IO.inspect(label: "Executed SQL files")
+Ducker.execute_query_from_dir(ducker, "sources")
+|> IO.inspect(label: "Executed queries")
 
-# run validation from `sources` directory
-Ducker.execute_validation_from_dir!(ducker, "sources")
-|> IO.inspect(label: "Executed validation")
+# run data tests from `sources` directory
+Ducker.execute_test_from_dir(ducker, "sources")
+|> IO.inspect(label: "Executed tests")
 
 :ok
 ```
@@ -65,7 +65,7 @@ result2 =
   Explorer.DataFrame.from_query!(
     conn,
     ~S"""
-    select * from ducker_validate_result
+    select * from ducker_data_test_result
     where fail_count > 0
     """,
     []

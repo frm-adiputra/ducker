@@ -198,7 +198,7 @@ defmodule Ducker do
   @doc """
   Resets the data test result in the database.
   """
-  def reset_data_test_result!(%__MODULE__{} = ducker) do
+  def reset_test_result!(%__MODULE__{} = ducker) do
     Conn.query!(ducker.conn, "DELETE FROM ducker_data_test_result")
   end
 

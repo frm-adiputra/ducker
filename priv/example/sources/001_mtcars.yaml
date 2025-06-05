@@ -1,6 +1,16 @@
 table: mtcars
 data_tests:
   - unique: model
-  - test: model IS NOT NULL
-  - test: mpg > 0
-  - test: vs > 0
+  - assert: model IS NOT NULL
+  - assert: mpg > 0
+  - assert: vs > 0
+---
+table: mtcars_colors
+data_tests:
+  - unique: model
+  - assert: model IS NOT NULL
+  - assert:
+      - color IS NOT NULL
+      - color IN ('red', 'blue', 'green')
+  - to: mtcars
+    fields: model
