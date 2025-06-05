@@ -58,7 +58,7 @@ Ducker.execute_test_from_dir(ducker, "sources")
 
 View validation result
 
-<!-- livebook:{"attrs":"eyJjYWNoZV9xdWVyeSI6dHJ1ZSwiY29ubmVjdGlvbiI6eyJ0eXBlIjoiZHVja2RiIiwidmFyaWFibGUiOiJjb25uIn0sImRhdGFfZnJhbWVfYWxpYXMiOiJFbGl4aXIuRXhwbG9yZXIuRGF0YUZyYW1lIiwicXVlcnkiOiJzZWxlY3QgKiBmcm9tIGR1Y2tlcl92YWxpZGF0ZV9yZXN1bHRcbndoZXJlIGZhaWxfY291bnQgPiAwIiwicmVzdWx0X3ZhcmlhYmxlIjoicmVzdWx0MiIsInRpbWVvdXQiOm51bGx9","chunks":null,"kind":"Elixir.KinoDB.SQLCell","livebook_object":"smart_cell"} -->
+<!-- livebook:{"attrs":"eyJjYWNoZV9xdWVyeSI6dHJ1ZSwiY29ubmVjdGlvbiI6eyJ0eXBlIjoiZHVja2RiIiwidmFyaWFibGUiOiJjb25uIn0sImRhdGFfZnJhbWVfYWxpYXMiOiJFbGl4aXIuRXhwbG9yZXIuRGF0YUZyYW1lIiwicXVlcnkiOiJzZWxlY3QgKiBmcm9tIGR1Y2tlcl9kYXRhX3Rlc3RfcmVzdWx0XG53aGVyZSBmYWlsX2NvdW50ID4gMCIsInJlc3VsdF92YXJpYWJsZSI6InJlc3VsdDIiLCJ0aW1lb3V0IjpudWxsfQ","chunks":null,"kind":"Elixir.KinoDB.SQLCell","livebook_object":"smart_cell"} -->
 
 ```elixir
 result2 =
