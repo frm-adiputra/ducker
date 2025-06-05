@@ -21,7 +21,7 @@ The package can be installed by adding `ducker` to your list of dependencies in 
 ```elixir
 def deps do
   [
-    {:ducker, "~> 0.2.0"}
+    {:ducker, "~> 0.3.0"}
   ]
 end
 ```
