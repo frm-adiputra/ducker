@@ -6,17 +6,17 @@ Mix.install([
   {:adbc, "~> 0.7.9"},
   {:kino, "~> 0.16.0"},
   {:kino_db, "~> 0.3.0"},
-  {:kino_explorer, "~> 0.1.24"}
+  {:kino_explorer, "~> 0.1.24"},
+  {:pythonx, "~> 0.4.2"},
+  {:kino_pythonx, "~> 0.1.0"}
 ])
 ```
 
-## Section
+## Initialization
 
 Create connection to DuckDB in-memory database
 
 ```elixir
-alias Adbc.Connection, as: Conn
-
 :ok = Adbc.download_driver!(:duckdb)
 {:ok, db} = Kino.start_child({Adbc.Database, driver: :duckdb})
 {:ok, conn} = Kino.start_child({Adbc.Connection, database: db})
@@ -25,7 +25,7 @@ alias Adbc.Connection, as: Conn
 work_dir = Path.join(:code.priv_dir(:ducker), "example")
 ```
 
-You can attach to DuckDB database file
+You can attach to DuckDB database file by running these SQL queries
 
 ```sql
 ATTACH '/path/to/your.db' AS file_db;
@@ -40,8 +40,25 @@ Initialize Ducker to create SQL macros and tables needed by Ducker.
 ducker = Ducker.new!(conn, work_dir)
 ```
 
+## Executing queries and tests
+
+First, lets see what's inside our working directory
+
 ```elixir
-# clear validation results
+Ducker.FileHelper.list_files(Path.join(work_dir, "data"))
+```
+
+```elixir
+Ducker.FileHelper.list_files(Path.join(work_dir, "sources"))
+```
+
+In the `data` directory, we have 2 CSV files that contain data.
+In the `sources` directory, we have 1 SQL file that contains 2 queries and 1 YAML file that contains tests for 2 tables.
+
+The following code will clear any test results, run all queries, and finally run all tests.
+
+```elixir
+# clear previous test results
 Ducker.reset_test_result!(ducker)
 
 # run query from `sources` directory
@@ -56,7 +73,15 @@ Ducker.execute_test_from_dir(ducker, "sources")
 :ok
 ```
 
-View validation result
+All test results are recorded in the `ducker_data_test_result` table.
+
+* `type` is the type of the test.
+* `entity` is the name of the entity that the test is running on, it can be a table or a view.
+* `label` is the name of the test.
+* `fail_count` is the count of records that failed the test.
+* `fail_query` is an SQL query that can be run to show the records that failed the test.
+
+The following code will show tests that failed.
 
 <!-- livebook:{"attrs":"eyJjYWNoZV9xdWVyeSI6dHJ1ZSwiY29ubmVjdGlvbiI6eyJ0eXBlIjoiZHVja2RiIiwidmFyaWFibGUiOiJjb25uIn0sImRhdGFfZnJhbWVfYWxpYXMiOiJFbGl4aXIuRXhwbG9yZXIuRGF0YUZyYW1lIiwicXVlcnkiOiJzZWxlY3QgKiBmcm9tIGR1Y2tlcl9kYXRhX3Rlc3RfcmVzdWx0XG53aGVyZSBmYWlsX2NvdW50ID4gMCIsInJlc3VsdF92YXJpYWJsZSI6InJlc3VsdDIiLCJ0aW1lb3V0IjpudWxsfQ","chunks":null,"kind":"Elixir.KinoDB.SQLCell","livebook_object":"smart_cell"} -->
 
