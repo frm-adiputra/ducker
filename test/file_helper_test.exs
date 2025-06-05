@@ -9,14 +9,15 @@ defmodule DuckerTest.FileHelper do
     assert l ==
              {:ok,
               [
-                "test/fixtures/.hidden.sql",
-                "test/fixtures/.hidden.yaml",
-                "test/fixtures/001_test.csv",
-                "test/fixtures/001_test.sql",
-                "test/fixtures/001_test.yaml",
-                "test/fixtures/002_test.csv",
-                "test/fixtures/002_test.sql",
-                "test/fixtures/002_test.yaml"
+                ".hidden.sql",
+                ".hidden.yaml",
+                "001_test.csv",
+                "001_test.sql",
+                "001_test.yaml",
+                "002_test.csv",
+                "002_test.sql",
+                "002_test.yaml",
+                "003_test.sql"
               ]}
   end
 
@@ -26,12 +27,13 @@ defmodule DuckerTest.FileHelper do
     assert l ==
              {:ok,
               [
-                "test/fixtures/001_test.csv",
-                "test/fixtures/001_test.sql",
-                "test/fixtures/001_test.yaml",
-                "test/fixtures/002_test.csv",
-                "test/fixtures/002_test.sql",
-                "test/fixtures/002_test.yaml"
+                "001_test.csv",
+                "001_test.sql",
+                "001_test.yaml",
+                "002_test.csv",
+                "002_test.sql",
+                "002_test.yaml",
+                "003_test.sql"
               ]}
   end
 
@@ -44,9 +46,9 @@ defmodule DuckerTest.FileHelper do
     assert l ==
              {:ok,
               [
-                "test/fixtures/001_test.csv",
-                "test/fixtures/001_test.sql",
-                "test/fixtures/001_test.yaml"
+                "001_test.csv",
+                "001_test.sql",
+                "001_test.yaml"
               ]}
   end
 
@@ -57,9 +59,10 @@ defmodule DuckerTest.FileHelper do
     assert l ==
              {:ok,
               [
-                "test/fixtures/.hidden.sql",
-                "test/fixtures/001_test.sql",
-                "test/fixtures/002_test.sql"
+                ".hidden.sql",
+                "001_test.sql",
+                "002_test.sql",
+                "003_test.sql"
               ]}
   end
 

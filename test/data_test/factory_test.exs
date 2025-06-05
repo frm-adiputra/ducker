@@ -1,11 +1,11 @@
-defmodule DuckerTest.DataTest.Config do
-  alias Ducker.DataTest.Config
+defmodule DuckerTest.DataTest.Factory do
+  import Ducker, only: [data_test_from_string: 1]
   use ExUnit.Case, async: true
 
-  describe "Data Test Config" do
+  describe "Data Test Factory" do
     test "invalid configuration" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - fields: field1

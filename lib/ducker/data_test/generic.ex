@@ -2,13 +2,12 @@ defmodule Ducker.DataTest.Generic do
   @behaviour Ducker.DataTest
 
   alias __MODULE__
-  alias Ducker.SQLHelper
+  alias Ducker.DataTest.Utils
 
-  @enforce_keys [:file, :table, :assert]
-  defstruct [:file, :table, :assert, :where_clause, :type]
+  @enforce_keys [:table, :assert]
+  defstruct [:table, :assert, :where_clause, :type]
 
   @type t :: %__MODULE__{
-          file: String.t(),
           table: String.t(),
           assert: String.t() | list(String.t()),
           where_clause: String.t() | list(String.t()),
@@ -20,14 +19,14 @@ defmodule Ducker.DataTest.Generic do
     with {:ok, v} <- validate(v) do
       assert =
         cond do
-          is_list(v.assert) -> Enum.map(v.assert, &SQLHelper.escape_single_quotes/1)
-          is_binary(v.assert) -> [SQLHelper.escape_single_quotes(v.assert)]
+          is_list(v.assert) -> v.assert
+          is_binary(v.assert) -> [v.assert]
         end
 
       where_clause =
         cond do
-          is_list(v.where_clause) -> Enum.map(v.where_clause, &SQLHelper.escape_single_quotes/1)
-          is_binary(v.where_clause) -> [SQLHelper.escape_single_quotes(v.where_clause)]
+          is_list(v.where_clause) -> v.where_clause
+          is_binary(v.where_clause) -> [v.where_clause]
           is_nil(v.where_clause) -> nil
         end
 
@@ -62,15 +61,19 @@ defmodule Ducker.DataTest.Generic do
 
   defp interpolate_sql(%Generic{where_clause: nil} = v) do
     {
-      "data test #{v.table}: #{Enum.join(v.assert, " AND ")}",
-      "ducker_data_test('#{v.type}', '#{v.table}', '#{Enum.join(v.assert, " AND ")}')"
+      "#{v.table}: #{Enum.join(v.assert, " AND ")}",
+      Utils.wrap_test_sql(
+        "ducker_data_test('#{v.type}', '#{v.table}', '#{Enum.map(v.assert, &Utils.escape_single_quotes/1) |> Enum.join(" AND ")}')"
+      )
     }
   end
 
   defp interpolate_sql(%Generic{} = v) do
     {
-      "data test #{v.table}: #{Enum.join(v.assert, " AND ")} WHERE #{Enum.join(v.where_clause, " AND ")}",
-      "ducker_data_test('#{v.type}', '#{v.table}', '#{Enum.join(v.assert, " AND ")}', '#{Enum.join(v.where_clause, " AND ")}')"
+      "#{v.table}: #{Enum.join(v.assert, " AND ")} WHERE #{Enum.join(v.where_clause, " AND ")}",
+      Utils.wrap_test_sql(
+        "ducker_data_test('#{v.type}', '#{v.table}', '#{Enum.map(v.assert, &Utils.escape_single_quotes/1) |> Enum.join(" AND ")}', '#{Enum.map(v.where_clause, &Utils.escape_single_quotes/1) |> Enum.join(" AND ")}')"
+      )
     }
   end
 end

@@ -1,0 +1,5 @@
+table: mtcars_color
+data_tests:
+  - unique: model
+  - assert: color IN ('red', 'blue', 'green')
+  - assert: invalid IS NULL

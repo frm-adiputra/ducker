@@ -1,11 +1,12 @@
 defmodule DuckerTest.DataTest.Relationship do
-  alias Ducker.DataTest.Config
+  import Ducker, only: [data_test_from_string: 1]
+  alias Ducker.DataTest.Utils
   use ExUnit.Case, async: true
 
   describe "Relationship Data Test" do
     test "single field" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - to: other_table
@@ -15,14 +16,16 @@ defmodule DuckerTest.DataTest.Relationship do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: (field1) -> other_table(field1)",
-                  "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field1'])"
+                  "some_table: (field1) -> other_table(field1)",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field1'])"
+                  )
                 }}
     end
 
     test "single field with different name" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - to: other_table
@@ -33,14 +36,16 @@ defmodule DuckerTest.DataTest.Relationship do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: (field1) -> other_table(field3)",
-                  "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field3'])"
+                  "some_table: (field1) -> other_table(field3)",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field3'])"
+                  )
                 }}
     end
 
     test "multiple fields" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
           - to: other_table
@@ -52,14 +57,16 @@ defmodule DuckerTest.DataTest.Relationship do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: (field1, field2) -> other_table(field1, field2)",
-                  "ducker_data_test_relationship('error', 'some_table', ['field1', 'field2'], 'other_table', ['field1', 'field2'])"
+                  "some_table: (field1, field2) -> other_table(field1, field2)",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_relationship('error', 'some_table', ['field1', 'field2'], 'other_table', ['field1', 'field2'])"
+                  )
                 }}
     end
 
     test "multiple fields different names" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
           - to: other_table
@@ -74,14 +81,16 @@ defmodule DuckerTest.DataTest.Relationship do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: (field1, field2) -> other_table(field3, field4)",
-                  "ducker_data_test_relationship('error', 'some_table', ['field1', 'field2'], 'other_table', ['field3', 'field4'])"
+                  "some_table: (field1, field2) -> other_table(field3, field4)",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_relationship('error', 'some_table', ['field1', 'field2'], 'other_table', ['field3', 'field4'])"
+                  )
                 }}
     end
 
     test "single where clause" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - to: other_table
@@ -92,14 +101,16 @@ defmodule DuckerTest.DataTest.Relationship do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: (field1) -> other_table(field1) WHERE field2 > 0",
-                  "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field1'], 'field2 > 0')"
+                  "some_table: (field1) -> other_table(field1) WHERE field2 > 0",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field1'], 'field2 > 0')"
+                  )
                 }}
     end
 
     test "single where clause with single quote" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - to: other_table
@@ -110,14 +121,16 @@ defmodule DuckerTest.DataTest.Relationship do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: (field1) -> other_table(field1) WHERE field2 LIKE ''%hello%''",
-                  "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field1'], 'field2 LIKE ''%hello%''')"
+                  "some_table: (field1) -> other_table(field1) WHERE field2 LIKE '%hello%'",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field1'], 'field2 LIKE ''%hello%''')"
+                  )
                 }}
     end
 
     test "multiple where clauses" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - to: other_table
@@ -130,14 +143,16 @@ defmodule DuckerTest.DataTest.Relationship do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: (field1) -> other_table(field1) WHERE field2 IS NOT NULL AND field3 > 10",
-                  "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field1'], 'field2 IS NOT NULL AND field3 > 10')"
+                  "some_table: (field1) -> other_table(field1) WHERE field2 IS NOT NULL AND field3 > 10",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field1'], 'field2 IS NOT NULL AND field3 > 10')"
+                  )
                 }}
     end
 
     test "multiple where clauses with single quote" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - to: other_table
@@ -150,14 +165,16 @@ defmodule DuckerTest.DataTest.Relationship do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: (field1) -> other_table(field1) WHERE field2 LIKE ''%hello%'' AND field3 LIKE ''%world%''",
-                  "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field1'], 'field2 LIKE ''%hello%'' AND field3 LIKE ''%world%''')"
+                  "some_table: (field1) -> other_table(field1) WHERE field2 LIKE '%hello%' AND field3 LIKE '%world%'",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_relationship('error', 'some_table', ['field1'], 'other_table', ['field1'], 'field2 LIKE ''%hello%'' AND field3 LIKE ''%world%''')"
+                  )
                 }}
     end
 
     test "custom test type" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - to: other_table
@@ -168,14 +185,16 @@ defmodule DuckerTest.DataTest.Relationship do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: (field1) -> other_table(field1)",
-                  "ducker_data_test_relationship('warn', 'some_table', ['field1'], 'other_table', ['field1'])"
+                  "some_table: (field1) -> other_table(field1)",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_relationship('warn', 'some_table', ['field1'], 'other_table', ['field1'])"
+                  )
                 }}
     end
 
     test "invalid: fields and to_fields must have the same length" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - to: other_table
@@ -191,7 +210,7 @@ defmodule DuckerTest.DataTest.Relationship do
       assert {:error, "fields and to_fields must have the same length"} == Enum.at(cfg, 0)
 
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - to: other_table
@@ -205,7 +224,7 @@ defmodule DuckerTest.DataTest.Relationship do
       assert {:error, "fields and to_fields must have the same length"} == Enum.at(cfg, 0)
 
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - to: other_table

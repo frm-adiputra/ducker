@@ -1,5 +1,5 @@
 CREATE
-OR REPLACE TABLE mtcars AS
+OR REPLACE TABLE mtcars_color AS
 SELECT
     *
 FROM

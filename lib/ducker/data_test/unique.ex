@@ -2,13 +2,12 @@ defmodule Ducker.DataTest.Unique do
   @behaviour Ducker.DataTest
 
   alias __MODULE__
-  alias Ducker.SQLHelper
+  alias Ducker.DataTest.Utils
 
-  @enforce_keys [:file, :table, :fields]
-  defstruct [:file, :table, :fields, :where_clause, :type]
+  @enforce_keys [:table, :fields]
+  defstruct [:table, :fields, :where_clause, :type]
 
   @type t :: %__MODULE__{
-          file: String.t(),
           table: String.t(),
           fields: String.t() | list(String.t()),
           where_clause: String.t() | list(String.t()),
@@ -26,8 +25,8 @@ defmodule Ducker.DataTest.Unique do
 
       where_clause =
         cond do
-          is_list(v.where_clause) -> Enum.map(v.where_clause, &SQLHelper.escape_single_quotes/1)
-          is_binary(v.where_clause) -> [SQLHelper.escape_single_quotes(v.where_clause)]
+          is_list(v.where_clause) -> v.where_clause
+          is_binary(v.where_clause) -> [v.where_clause]
           is_nil(v.where_clause) -> nil
         end
 
@@ -56,15 +55,19 @@ defmodule Ducker.DataTest.Unique do
 
   defp interpolate_sql(%Unique{where_clause: nil} = v) do
     {
-      "data test #{v.table}: unique(#{Enum.join(v.fields, ", ")})",
-      "ducker_data_test_unique('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}])"
+      "#{v.table}: unique(#{Enum.join(v.fields, ", ")})",
+      Utils.wrap_test_sql(
+        "ducker_data_test_unique('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}])"
+      )
     }
   end
 
   defp interpolate_sql(%Unique{} = v) do
     {
-      "data test #{v.table}: unique(#{Enum.join(v.fields, ", ")}) WHERE #{Enum.join(v.where_clause, " AND ")}",
-      "ducker_data_test_unique('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{Enum.join(v.where_clause, " AND ")}')"
+      "#{v.table}: unique(#{Enum.join(v.fields, ", ")}) WHERE #{Enum.join(v.where_clause, " AND ")}",
+      Utils.wrap_test_sql(
+        "ducker_data_test_unique('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{Enum.map(v.where_clause, &Utils.escape_single_quotes/1) |> Enum.join(" AND ")}')"
+      )
     }
   end
 end

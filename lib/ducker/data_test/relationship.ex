@@ -2,13 +2,12 @@ defmodule Ducker.DataTest.Relationship do
   @behaviour Ducker.DataTest
 
   alias __MODULE__
-  alias Ducker.SQLHelper
+  alias Ducker.DataTest.Utils
 
-  @enforce_keys [:file, :table, :fields, :to]
-  defstruct [:file, :table, :fields, :to, :to_fields, :where_clause, :type]
+  @enforce_keys [:table, :fields, :to]
+  defstruct [:table, :fields, :to, :to_fields, :where_clause, :type]
 
   @type t :: %__MODULE__{
-          file: String.t(),
           table: String.t(),
           fields: String.t() | list(String.t()),
           to: String.t(),
@@ -35,8 +34,8 @@ defmodule Ducker.DataTest.Relationship do
 
       where_clause =
         cond do
-          is_list(v.where_clause) -> Enum.map(v.where_clause, &SQLHelper.escape_single_quotes/1)
-          is_binary(v.where_clause) -> [SQLHelper.escape_single_quotes(v.where_clause)]
+          is_list(v.where_clause) -> v.where_clause
+          is_binary(v.where_clause) -> [v.where_clause]
           is_nil(v.where_clause) -> nil
         end
 
@@ -79,15 +78,19 @@ defmodule Ducker.DataTest.Relationship do
 
   defp interpolate_sql(%Relationship{where_clause: nil} = v) do
     {
-      "data test #{v.table}: (#{Enum.join(v.fields, ", ")}) -> #{v.to}(#{Enum.join(v.to_fields, ", ")})",
-      "ducker_data_test_relationship('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{v.to}', [#{v.to_fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}])"
+      "#{v.table}: (#{Enum.join(v.fields, ", ")}) -> #{v.to}(#{Enum.join(v.to_fields, ", ")})",
+      Utils.wrap_test_sql(
+        "ducker_data_test_relationship('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{v.to}', [#{v.to_fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}])"
+      )
     }
   end
 
   defp interpolate_sql(%Relationship{} = v) do
     {
-      "data test #{v.table}: (#{Enum.join(v.fields, ", ")}) -> #{v.to}(#{Enum.join(v.to_fields, ", ")}) WHERE #{Enum.join(v.where_clause, " AND ")}",
-      "ducker_data_test_relationship('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{v.to}', [#{v.to_fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{Enum.join(v.where_clause, " AND ")}')"
+      "#{v.table}: (#{Enum.join(v.fields, ", ")}) -> #{v.to}(#{Enum.join(v.to_fields, ", ")}) WHERE #{Enum.join(v.where_clause, " AND ")}",
+      Utils.wrap_test_sql(
+        "ducker_data_test_relationship('#{v.type}', '#{v.table}', [#{v.fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{v.to}', [#{v.to_fields |> Enum.map(&"'#{&1}'") |> Enum.join(", ")}], '#{Enum.map(v.where_clause, &Utils.escape_single_quotes/1) |> Enum.join(" AND ")}')"
+      )
     }
   end
 end

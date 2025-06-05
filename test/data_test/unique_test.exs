@@ -1,11 +1,12 @@
 defmodule DuckerTest.DataTest.Unique do
-  alias Ducker.DataTest.Config
+  import Ducker, only: [data_test_from_string: 1]
+  alias Ducker.DataTest.Utils
   use ExUnit.Case, async: true
 
   describe "Unique Data Test" do
     test "single field" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - unique: field1
@@ -14,14 +15,16 @@ defmodule DuckerTest.DataTest.Unique do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: unique(field1)",
-                  "ducker_data_test_unique('error', 'some_table', ['field1'])"
+                  "some_table: unique(field1)",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_unique('error', 'some_table', ['field1'])"
+                  )
                 }}
     end
 
     test "multiple fields" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - unique:
@@ -32,14 +35,16 @@ defmodule DuckerTest.DataTest.Unique do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: unique(field1, field2)",
-                  "ducker_data_test_unique('error', 'some_table', ['field1', 'field2'])"
+                  "some_table: unique(field1, field2)",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_unique('error', 'some_table', ['field1', 'field2'])"
+                  )
                 }}
     end
 
     test "single where clause" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - unique: field1
@@ -49,14 +54,16 @@ defmodule DuckerTest.DataTest.Unique do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: unique(field1) WHERE field2 > 0",
-                  "ducker_data_test_unique('error', 'some_table', ['field1'], 'field2 > 0')"
+                  "some_table: unique(field1) WHERE field2 > 0",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_unique('error', 'some_table', ['field1'], 'field2 > 0')"
+                  )
                 }}
     end
 
     test "single where clause with single quote" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - unique: field1
@@ -66,14 +73,16 @@ defmodule DuckerTest.DataTest.Unique do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: unique(field1) WHERE field2 LIKE ''%hello%''",
-                  "ducker_data_test_unique('error', 'some_table', ['field1'], 'field2 LIKE ''%hello%''')"
+                  "some_table: unique(field1) WHERE field2 LIKE '%hello%'",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_unique('error', 'some_table', ['field1'], 'field2 LIKE ''%hello%''')"
+                  )
                 }}
     end
 
     test "multiple where clauses" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - unique: field1
@@ -85,14 +94,16 @@ defmodule DuckerTest.DataTest.Unique do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: unique(field1) WHERE field2 IS NOT NULL AND field3 > 10",
-                  "ducker_data_test_unique('error', 'some_table', ['field1'], 'field2 IS NOT NULL AND field3 > 10')"
+                  "some_table: unique(field1) WHERE field2 IS NOT NULL AND field3 > 10",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_unique('error', 'some_table', ['field1'], 'field2 IS NOT NULL AND field3 > 10')"
+                  )
                 }}
     end
 
     test "multiple where clauses with single quote" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - unique: field1
@@ -104,14 +115,16 @@ defmodule DuckerTest.DataTest.Unique do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: unique(field1) WHERE field2 LIKE ''%hello%'' AND field3 LIKE ''%world%''",
-                  "ducker_data_test_unique('error', 'some_table', ['field1'], 'field2 LIKE ''%hello%'' AND field3 LIKE ''%world%''')"
+                  "some_table: unique(field1) WHERE field2 LIKE '%hello%' AND field3 LIKE '%world%'",
+                  Utils.wrap_test_sql(
+                    "ducker_data_test_unique('error', 'some_table', ['field1'], 'field2 LIKE ''%hello%'' AND field3 LIKE ''%world%''')"
+                  )
                 }}
     end
 
     test "custom test type" do
       cfg =
-        Config.from_string("""
+        data_test_from_string("""
           table: some_table
           data_tests:
             - unique: field1
@@ -121,8 +134,8 @@ defmodule DuckerTest.DataTest.Unique do
       assert Enum.at(cfg, 0) ==
                {:ok,
                 {
-                  "data test some_table: unique(field1)",
-                  "ducker_data_test_unique('warn', 'some_table', ['field1'])"
+                  "some_table: unique(field1)",
+                  Utils.wrap_test_sql("ducker_data_test_unique('warn', 'some_table', ['field1'])")
                 }}
     end
   end

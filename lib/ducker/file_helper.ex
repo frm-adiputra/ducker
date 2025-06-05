@@ -18,13 +18,15 @@ defmodule Ducker.FileHelper do
           v -> v
         end
 
-      {:ok,
-       files
-       |> may_exclude_hidden(exclude_hidden)
-       |> may_filter_ext(ext)
-       |> Enum.filter(filter_fn)
-       |> Enum.sort()
-       |> Enum.map(fn file -> Path.join(path, file) end)}
+      {
+        :ok,
+        files
+        |> may_exclude_hidden(exclude_hidden)
+        |> may_filter_ext(ext)
+        |> Enum.filter(filter_fn)
+        |> Enum.sort()
+        # |> Enum.map(fn file -> Path.join(path, file) end)
+      }
     else
       {:error, :enoent} ->
         {:error, "directory not found: #{path}"}
