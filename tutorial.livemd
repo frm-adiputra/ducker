@@ -6,9 +6,7 @@ Mix.install([
   {:adbc, "~> 0.7.9"},
   {:kino, "~> 0.16.0"},
   {:kino_db, "~> 0.3.0"},
-  {:kino_explorer, "~> 0.1.24"},
-  {:pythonx, "~> 0.4.2"},
-  {:kino_pythonx, "~> 0.1.0"}
+  {:kino_explorer, "~> 0.1.24"}
 ])
 ```
 
@@ -72,6 +70,8 @@ Ducker.execute_test_from_dir(ducker, "sources")
 
 :ok
 ```
+
+## Test results
 
 All test results are recorded in the `ducker_data_test_result` table.
 
