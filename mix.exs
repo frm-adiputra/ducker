@@ -32,7 +32,7 @@ defmodule Ducker.MixProject do
   defp deps do
     [
       {:adbc, "~> 0.8", optional: true},
-      {:ex_doc, "~> 0.40", only: :dev, runtime: false, warn_if_outdated: true},
+      {:ex_doc, "~> 0.39", only: :dev, runtime: false, warn_if_outdated: true},
       {:yaml_elixir, "~> 2.11.0"}
     ]
   end
