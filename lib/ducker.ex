@@ -30,23 +30,39 @@ defmodule Ducker do
     d
   end
 
+  @doc """
+  Executes all SQL files (.sql) in the given directory.
+
+  ## Options
+
+  - `:assigns` - A list of key-value pairs to be used as bindings in SQL files.
+  """
   def execute_query_from_dir(%__MODULE__{} = ducker, dir, opts \\ []) do
-    eex = Keyword.get(opts, :eex, false)
+    assigns = Keyword.get(opts, :assigns, [])
     dir = Path.expand(dir, ducker.work_dir)
-    bindings = if eex, do: [assigns: [work_dir: ducker.work_dir]], else: nil
     filter_fn = Keyword.get(opts, :filter)
 
     with {:ok, files} <-
            FileHelper.list_files(dir, ext: ".sql", exclude_hidden: true, filter: filter_fn) do
       files
       |> Stream.map(&Path.join(dir, &1))
-      |> Stream.map(fn file -> execute_query_from_file(ducker, file, bindings) end)
+      |> Stream.map(fn file -> execute_query_from_file(ducker, file, assigns: assigns) end)
       |> Stream.flat_map(& &1)
       |> Enum.to_list()
     end
   end
 
-  def execute_query_from_file(%__MODULE__{} = ducker, file, bindings) do
+  @doc """
+  Executes the specified SQL file.
+
+  ## Options
+
+  - `:assigns` - A list of key-value pairs to be used as bindings in SQL files.
+  """
+  def execute_query_from_file(%__MODULE__{} = ducker, file, opts \\ []) do
+    assigns = Keyword.get(opts, :assigns, [])
+    bindings = [assigns: assigns, work_dir: ducker.work_dir]
+
     with {:ok, content} <- File.read(file) do
       String.split(content, "---")
       |> Stream.with_index(fn x, i -> {i + 1, x} end)
